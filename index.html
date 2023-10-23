@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h1>Therapist Availability Calculator u</h1>
+  <h1>Therapist Availability Calculator</h1>
   
   <label for="customPersonhours">Enter Custom Total Personhours per Week:</label>
   <input type="number" id="customPersonhours" placeholder="Enter total personhours in hours"><br>
@@ -40,9 +40,6 @@
 
     // Add an event listener for the slider input
     document.getElementById('flexibilitySlider').addEventListener('input', updateFlexibilityValue);
-
-    const customFrequencies = []; // Store custom frequencies
-    const customPatients = []; // Store number of patients for custom frequencies
 
     function addInputField() {
       const patientInputs = document.getElementById('patientInputs');
@@ -99,8 +96,9 @@
           if (frequencySelects[i].value === '0' && !isNaN(customFrequency) && !isNaN(customPatients)) {
             // Use custom frequency and patients if "Custom" is selected
             totalPersonhours -= customPatients * customFrequency;
-          } else {
-            totalPersonhours -= selectedFrequency;
+          } else if (frequencySelects[i].value !== '0') {
+            // Subtract patients for other frequency options
+            totalPersonhours -= customPatients * selectedFrequency;
           }
         }
       }

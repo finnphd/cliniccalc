@@ -23,7 +23,7 @@
   <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
   <p>Flexibility Level: <span id="flexibilityValue">0</span></p>
   
-  <label for="predictNextMonth">Predict Next Month:</label>
+  <label for "predictNextMonth">Predict Next Month:</label>
   <input type="checkbox" id="predictNextMonth">
   
   <button onclick="calculateAvailability()">Calculate</button>
@@ -56,13 +56,17 @@
         </select>
         <input type="number" class="customFrequency" placeholder="Frequency" style="display: none;">
         <input type="number" class="customPatients" placeholder="Number of Patients" style="display: none;">
+        <input type="number" class="patients" placeholder="Enter number of patients">
       `;
       patientInputs.appendChild(inputField);
       
       // Event listener for handling "Custom" selection in the added frequency field
       const frequencySelect = inputField.querySelector('.frequencySelect');
       const customFrequencyField = inputField.querySelector('.customFrequency');
+      customFrequencyField.addEventListener('input', calculateAvailability); // Add input listener
       const customPatientsField = inputField.querySelector('.customPatients');
+      customPatientsField.addEventListener('input', calculateAvailability); // Add input listener
+      
       frequencySelect.addEventListener('change', function() {
         const selectedValue = this.value;
         if (selectedValue === '0') {
@@ -83,6 +87,7 @@
       const frequencySelects = document.querySelectorAll('.frequencySelect');
       const customFrequencyInputs = document.querySelectorAll('.customFrequency');
       const customPatientsInputs = document.querySelectorAll('.customPatients');
+      const patientsInputs = document.querySelectorAll('.patients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
       
       let totalPersonhours = customPersonhours;
@@ -91,12 +96,13 @@
         const selectedFrequency = parseFloat(frequencySelects[i].value);
         const customFrequency = parseFloat(customFrequencyInputs[i].value);
         const customPatients = parseFloat(customPatientsInputs[i].value);
+        const patients = parseFloat(patientsInputs[i].value);
         
         if (!isNaN(customFrequency) && !isNaN(customPatients)) {
           // Use custom frequency and patients if both are valid
           totalPersonhours -= customPatients * customFrequency;
         } else if (!isNaN(selectedFrequency)) {
-          totalPersonhours -= customPatients * selectedFrequency;
+          totalPersonhours -= patients * selectedFrequency;
         }
       }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Therapist Availability Calculator update</title>
+  <title>Therapist Availability Calculator</title>
   <style>
     /* CSS for the slider */
     #flexibilitySlider {
@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h1>Therapist Availability Calculator</h1>
+  <h1>Therapist Availability Calculator update</h1>
   
   <label for="customPersonhours">Enter Custom Total Personhours per Week:</label>
   <input type="number" id="customPersonhours" placeholder="Enter total personhours in hours"><br>
@@ -95,6 +95,11 @@
       totalPersonhours -= flexibility; // Subtract flexibility from totalPersonhours
 
       let resultText = `Personhours per Week: ${totalPersonhours} hours`;
+
+      if (predictNextMonth) {
+        // Include instructions for next month's predictions
+        resultText += "<br><br><b>Next Month's Predictions:</b> Consider factors such as expected changes in patient load, availability, and flexibility. You can modify the input values above to make predictions for next month.";
+      }
 
       document.getElementById('result').innerHTML = resultText;
     }

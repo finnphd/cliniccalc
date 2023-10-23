@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Therapist Availability Calculator</title>
+  <style>
+    /* CSS for the slider */
+    #flexibilitySlider {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Therapist Availability Calculator</h1>
+  
+  <label for="customPersonhours">Enter Custom Total Personhours per Week:</label>
+  <input type="number" id="customPersonhours" placeholder="Enter total personhours in hours"><br>
+  
+  <div id="patientInputs">
+    <div>
+      <label for="patients">Frequency:</label>
+      <select class="frequencySelect">
+        <option value="1">Weekly</option>
+        <option value="0.5">Every Other Week</option>
+        <option value="0.25">Monthly</option>
+        <option value="2">Twice a Week</option>
+        <option value="">Custom</option>
+      </select>
+      <input type="number" class="patients" placeholder="Enter number of patients">
+    </div>
+  </div>
+
+  <label for="flexibility">Flexibility:</label>
+  <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
+  <p>Flexibility Level: <span id="flexibilityValue">0</span></p>
+  
+  <label for="predictNextMonth">Predict Next Month:</label>
+  <input type="checkbox" id="predictNextMonth">
+  
+  <button onclick="calculateAvailability()">Calculate</button>
+  
+  <p id="result"></p>
+
+  <script>
+    // Function to update flexibility value display
+    function updateFlexibilityValue() {
+      const flexibilitySlider = document.getElementById('flexibilitySlider');
+      const flexibilityValue = document.getElementById('flexibilityValue');
+      flexibilityValue.textContent = flexibilitySlider.value;
+    }
+
+    // Add an event listener for the slider input
+    document.getElementById('flexibilitySlider').addEventListener('input', updateFlexibilityValue);
+
+    function addInputField() {
+      const patientInputs = document.getElementById('patientInputs');
+      
+      const inputField = document.createElement('div');
+      inputField.innerHTML = `
+        <label for="patients">Frequency:</label>
+        <select class="frequencySelect">
+          <option value="1">Weekly</option>
+          <option value="0.5">Every Other Week</option>
+          <option value="0.25">Monthly</option>
+          <option value="2">Twice a Week</option>
+          <option value="">Custom</option>
+        </select>
+        <input type="number" class="patients" placeholder="Enter number of patients">
+      `;
+      patientInputs.appendChild(inputField);
+    }
+
+    function calculateAvailability() {
+      const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
+      const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
+      const frequencySelects = document.querySelectorAll('.frequencySelect');
+      const patientsInputs = document.querySelectorAll('.patients');
+      const predictNextMonth = document.getElementById('predictNextMonth').checked;
+      
+      let totalPersonhours = customPersonhours;
+
+      for (let i = 0; i < frequencySelects.length; i++) {
+        const selectedFrequency = parseFloat(frequencySelects[i].value);
+        const customPatients = parseFloat(patientsInputs[i].value);
+        const patients = isNaN(customPatients) ? 0 : customPatients;
+        totalPersonhours += patients * selectedFrequency;
+      }
+
+      const adjustedAvailability = totalPersonhours + flexibility;
+      const difference = adjustedAvailability - totalPersonhours;
+
+      let resultText = `Personhours per Week: ${totalPersonhours} hours <br> Availability - Personhours: ${difference} hours`;
+
+      if (predictNextMonth) {
+        // Include instructions for next month's predictions
+        resultText += "<br><br><b>Next Month's Predictions:</b> Consider factors such as expected changes in patient load, availability, and flexibility. You can modify the input values above to make predictions for next month.";
+      }
+
+      document.getElementById('result').innerHTML = resultText;
+    }
+  </script>
+</body>
+</html>

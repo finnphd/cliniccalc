@@ -23,8 +23,9 @@
         <option value="0.5">Every Other Week</option>
         <option value="0.25">Monthly</option>
         <option value="2">Twice a Week</option>
-        <option value="">Custom</option>
+        <option value="0">Custom</option>
       </select>
+      <input type="number" class="customHours" placeholder="Enter hours per week">
       <input type="number" class="patients" placeholder="Enter number of patients">
     </div>
     <div>
@@ -34,8 +35,9 @@
         <option value="0.5">Every Other Week</option>
         <option value="0.25">Monthly</option>
         <option value="2">Twice a Week</option>
-        <option value="">Custom</option>
+        <option value="0">Custom</option>
       </select>
+      <input type="number" class="customHours" placeholder="Enter hours per week">
       <input type="number" class="patients" placeholder="Enter number of patients">
     </div>
     <div>
@@ -45,8 +47,9 @@
         <option value="0.5">Every Other Week</option>
         <option value="0.25">Monthly</option>
         <option value="2">Twice a Week</option>
-        <option value="">Custom</option>
+        <option value="0">Custom</option>
       </select>
+      <input type="number" class="customHours" placeholder="Enter hours per week">
       <input type="number" class="patients" placeholder="Enter number of patients">
     </div>
     <div>
@@ -56,9 +59,10 @@
         <option value="0.5">Every Other Week</option>
         <option value="0.25">Monthly</option>
         <option value="2">Twice a Week</option>
-        <option value="">Custom</option>
+        <option value="0">Custom</option>
       </select>
-      <input type="number" class="patients" placeholder="Enter number of patients">
+      <input type="number" class="customHours" placeholder="Enter hours per week">
+      <input type="number" class "patients" placeholder="Enter number of patients">
     </div>
     <div>
       <label for="patients">Frequency:</label>
@@ -67,9 +71,10 @@
         <option value="0.5">Every Other Week</option>
         <option value="0.25">Monthly</option>
         <option value="2">Twice a Week</option>
-        <option value="">Custom</option>
+        <option value="0">Custom</option>
       </select>
-      <input type="number" class="patients" placeholder="Enter number of patients">
+      <input type="number" class="customHours" placeholder="Enter hours per week">
+      <input type="number" class "patients" placeholder="Enter number of patients">
     </div>
   </div>
 
@@ -106,17 +111,28 @@
           <option value="0.5">Every Other Week</option>
           <option value="0.25">Monthly</option>
           <option value="2">Twice a Week</option>
-          <option value="">Custom</option>
+          <option value="0">Custom</option>
         </select>
+        <input type="number" class="customHours" placeholder="Enter hours per week">
         <input type="number" class="patients" placeholder="Enter number of patients">
       `;
       patientInputs.appendChild(inputField);
+    }
+
+    // Event listener for handling "Custom" selection in frequency
+    const frequencySelects = document.querySelectorAll('.frequencySelect');
+    for (let i = 0; i < frequencySelects.length; i++) {
+      frequencySelects[i].addEventListener('change', function() {
+        const customHoursField = this.parentElement.querySelector('.customHours');
+        customHoursField.style.display = this.value === '0' ? 'block' : 'none';
+      });
     }
 
     function calculateAvailability() {
       const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
       const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
       const frequencySelects = document.querySelectorAll('.frequencySelect');
+      const customHoursInputs = document.querySelectorAll('.customHours');
       const patientsInputs = document.querySelectorAll('.patients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
       
@@ -124,9 +140,15 @@
 
       for (let i = 0; i < frequencySelects.length; i++) {
         const selectedFrequency = parseFloat(frequencySelects[i].value);
-        const customPatients = parseFloat(patientsInputs[i].value);
-        const patients = isNaN(customPatients) ? 0 : customPatients;
-        totalPersonhours -= patients * selectedFrequency;
+        const customHours = parseFloat(customHoursInputs[i].value);
+        const patients = parseFloat(patientsInputs[i].value);
+        
+        if (frequencySelects[i].value === '0') {
+          // Use custom hours if "Custom" is selected
+          totalPersonhours -= customHours;
+        } else {
+          totalPersonhours -= patients * selectedFrequency;
+        }
       }
 
       totalPersonhours -= flexibility; // Subtract flexibility from totalPersonhours

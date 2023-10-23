@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h1>Therapist Availability Calculator</h1>
+  <h1>Therapist Availability Calculator u</h1>
   
   <label for="customPersonhours">Enter Custom Total Personhours per Week:</label>
   <input type="number" id="customPersonhours" placeholder="Enter total personhours in hours"><br>
@@ -41,6 +41,9 @@
     // Add an event listener for the slider input
     document.getElementById('flexibilitySlider').addEventListener('input', updateFlexibilityValue);
 
+    const customFrequencies = []; // Store custom frequencies
+    const customPatients = []; // Store number of patients for custom frequencies
+
     function addInputField() {
       const patientInputs = document.getElementById('patientInputs');
       
@@ -54,16 +57,26 @@
           <option value="0.25">Monthly</option>
           <option value="0">Custom</option>
         </select>
-        <input type="number" class="customHours" placeholder="Enter hours per week" style="display: none;">
-        <input type="number" class="patients" placeholder="Enter number of patients">
+        <input type="number" class="customFrequency" placeholder="Frequency" style="display: none;">
+        <input type="number" class="customPatients" placeholder="Number of Patients" style="display: none;">
       `;
       patientInputs.appendChild(inputField);
       
       // Event listener for handling "Custom" selection in the added frequency field
       const frequencySelect = inputField.querySelector('.frequencySelect');
+      const customFrequencyField = inputField.querySelector('.customFrequency');
+      const customPatientsField = inputField.querySelector('.customPatients');
       frequencySelect.addEventListener('change', function() {
-        const customHoursField = this.parentElement.querySelector('.customHours');
-        customHoursField.style.display = this.value === '0' ? 'block' : 'none';
+        const selectedValue = this.value;
+        if (selectedValue === '0') {
+          // Show the custom fields for this custom frequency
+          customFrequencyField.style.display = 'block';
+          customPatientsField.style.display = 'block';
+        } else {
+          // Hide the custom fields if another option is selected
+          customFrequencyField.style.display = 'none';
+          customPatientsField.style.display = 'none';
+        }
       });
     }
 
@@ -71,25 +84,23 @@
       const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
       const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
       const frequencySelects = document.querySelectorAll('.frequencySelect');
-      const customHoursInputs = document.querySelectorAll('.customHours');
-      const patientsInputs = document.querySelectorAll('.patients');
+      const customFrequencyInputs = document.querySelectorAll('.customFrequency');
+      const customPatientsInputs = document.querySelectorAll('.customPatients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
       
       let totalPersonhours = customPersonhours;
 
       for (let i = 0; i < frequencySelects.length; i++) {
         const selectedFrequency = parseFloat(frequencySelects[i].value);
-        const customHours = parseFloat(customHoursInputs[i].value);
-        const patients = parseFloat(patientsInputs[i].value);
+        const customFrequency = parseFloat(customFrequencyInputs[i].value);
+        const customPatients = parseFloat(customPatientsInputs[i].value);
         
-        // Validate input before calculation
-        if (!isNaN(patients)) {
-          if (frequencySelects[i].value === '0' && !isNaN(customHours)) {
-            // Use custom hours if "Custom" is selected and custom hours are valid
-            totalPersonhours -= customHours;
-          } else if (!isNaN(selectedFrequency)) {
-            // Multiply the number of patients by the selected frequency
-            totalPersonhours -= patients * selectedFrequency;
+        if (!isNaN(selectedFrequency)) {
+          if (frequencySelects[i].value === '0' && !isNaN(customFrequency) && !isNaN(customPatients)) {
+            // Use custom frequency and patients if "Custom" is selected
+            totalPersonhours -= customPatients * customFrequency;
+          } else {
+            totalPersonhours -= selectedFrequency;
           }
         }
       }

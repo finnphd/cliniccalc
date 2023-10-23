@@ -82,13 +82,12 @@
         const selectedFrequency = parseFloat(frequencySelects[i].value);
         const customPatients = parseFloat(patientsInputs[i].value);
         const patients = isNaN(customPatients) ? 0 : customPatients;
-        totalPersonhours += patients * selectedFrequency;
+        totalPersonhours -= patients * selectedFrequency;
       }
 
-      const adjustedAvailability = totalPersonhours + flexibility;
-      const difference = adjustedAvailability - totalPersonhours;
+      totalPersonhours -= flexibility; // Subtract flexibility from totalPersonhours
 
-      let resultText = `Personhours per Week: ${totalPersonhours} hours <br> Availability - Personhours: ${difference} hours`;
+      let resultText = `Personhours per Week: ${totalPersonhours} hours`;
 
       if (predictNextMonth) {
         // Include instructions for next month's predictions

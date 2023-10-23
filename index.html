@@ -15,19 +15,9 @@
   <label for="customPersonhours">Enter Custom Total Personhours per Week:</label>
   <input type="number" id="customPersonhours" placeholder="Enter total personhours in hours"><br>
   
-  <div id="patientInputs">
-    <div>
-      <label for="patients">Frequency:</label>
-      <select class="frequencySelect">
-        <option value="1">Weekly</option>
-        <option value="0.5">Every Other Week</option>
-        <option value="0.25">Monthly</option>
-        <option value="2">Twice a Week</option>
-        <option value="">Custom</option>
-      </select>
-      <input type="number" class="patients" placeholder="Enter number of patients">
-    </div>
-  </div>
+  <div id="patientInputs"></div>
+  
+  <button onclick="addInputField()">Add Frequency Field</button>
 
   <label for="flexibility">Flexibility:</label>
   <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
@@ -58,21 +48,30 @@
       inputField.innerHTML = `
         <label for="patients">Frequency:</label>
         <select class="frequencySelect">
+          <option value="2">Twice a Week</option>
           <option value="1">Weekly</option>
           <option value="0.5">Every Other Week</option>
           <option value="0.25">Monthly</option>
-          <option value="2">Twice a Week</option>
-          <option value="">Custom</option>
+          <option value="0">Custom</option>
         </select>
+        <input type="number" class="customHours" placeholder="Enter hours per week" style="display: none;">
         <input type="number" class="patients" placeholder="Enter number of patients">
       `;
       patientInputs.appendChild(inputField);
+      
+      // Event listener for handling "Custom" selection in the added frequency field
+      const frequencySelect = inputField.querySelector('.frequencySelect');
+      frequencySelect.addEventListener('change', function() {
+        const customHoursField = this.parentElement.querySelector('.customHours');
+        customHoursField.style.display = this.value === '0' ? 'block' : 'none';
+      });
     }
 
     function calculateAvailability() {
       const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
       const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
       const frequencySelects = document.querySelectorAll('.frequencySelect');
+      const customHoursInputs = document.querySelectorAll('.customHours');
       const patientsInputs = document.querySelectorAll('.patients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
       
@@ -80,19 +79,26 @@
 
       for (let i = 0; i < frequencySelects.length; i++) {
         const selectedFrequency = parseFloat(frequencySelects[i].value);
-        const customPatients = parseFloat(patientsInputs[i].value);
-        const patients = isNaN(customPatients) ? 0 : customPatients;
-        totalPersonhours += patients * selectedFrequency;
+        const customHours = parseFloat(customHoursInputs[i].value);
+        const patients = parseFloat(patientsInputs[i].value);
+        
+        if (!isNaN(selectedFrequency) && !isNaN(customHours) && !isNaN(patients)) {
+          if (frequencySelects[i].value === '0') {
+            // Use custom hours if "Custom" is selected
+            totalPersonhours -= customHours;
+          } else {
+            totalPersonhours -= patients * selectedFrequency;
+          }
+        }
       }
 
-      const adjustedAvailability = totalPersonhours + flexibility;
-      const difference = adjustedAvailability - totalPersonhours;
+      totalPersonhours -= flexibility; // Subtract flexibility from totalPersonhours
 
-      let resultText = `Personhours per Week: ${totalPersonhours} hours <br> Availability - Personhours: ${difference} hours`;
+      let resultText = `Personhours per Week: ${totalPersonhours} hours`;
 
       if (predictNextMonth) {
         // Include instructions for next month's predictions
-        resultText += "<br><br>For next month's predictions, consider factors such as expected changes in patient load, availability, and flexibility.";
+        resultText += "<br><br><b>Next Month's Predictions:</b> Consider factors such as expected changes in patient load, availability, and flexibility. You can modify the input values above to make predictions for next month.";
       }
 
       document.getElementById('result').innerHTML = resultText;

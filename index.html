@@ -82,11 +82,13 @@
         const customHours = parseFloat(customHoursInputs[i].value);
         const patients = parseFloat(patientsInputs[i].value);
         
-        if (frequencySelects[i].value === '0') {
-          // Use custom hours if "Custom" is selected
-          totalPersonhours -= customHours;
-        } else {
-          totalPersonhours -= patients * selectedFrequency;
+        if (!isNaN(selectedFrequency) && !isNaN(customHours) && !isNaN(patients)) {
+          if (frequencySelects[i].value === '0') {
+            // Use custom hours if "Custom" is selected
+            totalPersonhours -= customHours;
+          } else {
+            totalPersonhours -= patients * selectedFrequency;
+          }
         }
       }
 

@@ -26,17 +26,6 @@
   <label for="predictNextMonth">Predict Next Month:</label>
   <input type="checkbox" id="predictNextMonth">
   
-  <div id="predictions">
-    <h3>Next Month's Predictions</h3>
-    <table>
-      <tr>
-        <th>Frequency Category</th>
-        <th>Anticipate Increasing To</th>
-        <th>Anticipate Decreasing To</th>
-      </tr>
-    </table>
-  </div>
-  
   <button onclick="calculateAvailability()">Calculate</button>
   
   <p id="result"></p>
@@ -85,7 +74,6 @@
       const customHoursInputs = document.querySelectorAll('.customHours');
       const patientsInputs = document.querySelectorAll('.patients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
-      const predictionsTable = document.querySelector('table');
       
       let totalPersonhours = customPersonhours;
 
@@ -108,102 +96,8 @@
 
       let resultText = `Personhours per Week: ${totalPersonhours} hours`;
 
-      if (predictNextMonth) {
-        // Include instructions for next month's predictions
-        resultText += "<br><br><b>Next Month's Predictions:</b>";
-
-        predictionsTable.innerHTML = `
-          <tr>
-            <th>Frequency Category</th>
-            <th>Anticipate Increasing To</th>
-            <th>Anticipate Decreasing To</th>
-          </tr>
-          <tr>
-            <td>Twice a Week</td>
-            <td><input type="number" id="twiceWeekIncrease" placeholder="0"></td>
-            <td><input type="number" id="twiceWeekDecrease" placeholder="0"></td>
-          </tr>
-          <tr>
-            <td>Weekly</td>
-            <td><input type="number" id="weeklyIncrease" placeholder="0"></td>
-            <td><input type="number" id="weeklyDecrease" placeholder="0"></td>
-          </tr>
-          <tr>
-            <td>Every Other Week</td>
-            <td><input type="number" id="everyOtherWeekIncrease" placeholder="0"></td>
-            <td><input type="number" id="everyOtherWeekDecrease" placeholder="0"></td>
-          </tr>
-          <tr>
-            <td>Monthly</td>
-            <td><input type="number" id="monthlyIncrease" placeholder="0"></td>
-            <td><input type="number" id="monthlyDecrease" placeholder="0"></td>
-          </tr>
-        `;
-
-        const calculateButton = document.createElement('button');
-        calculateButton.innerText = "Calculate Predictions";
-        calculateButton.onclick = calculatePredictions;
-        document.getElementById('predictions').appendChild(calculateButton);
-      } else {
-        predictionsTable.innerHTML = "";
-      }
-
       document.getElementById('result').innerHTML = resultText;
-    }
-
-    function calculatePredictions() {
-      const predictionsTable = document.querySelector('table');
-      const twiceWeekIncrease = parseFloat(document.getElementById('twiceWeekIncrease').value);
-      const weeklyIncrease = parseFloat(document.getElementById('weeklyIncrease').value);
-      const everyOtherWeekIncrease = parseFloat(document.getElementById('everyOtherWeekIncrease').value);
-      const monthlyIncrease = parseFloat(document.getElementById('monthlyIncrease').value);
-      const twiceWeekDecrease = parseFloat(document.getElementById('twiceWeekDecrease').value);
-      const weeklyDecrease = parseFloat(document.getElementById('weeklyDecrease').value);
-      const everyOtherWeekDecrease = parseFloat(document.getElementById('everyOtherWeekDecrease').value);
-      const monthlyDecrease = parseFloat(document.getElementById('monthlyDecrease').value);
-      
-      predictionsTable.innerHTML = `
-        <tr>
-          <th>Frequency Category</th>
-          <th>Anticipate Increasing To</th>
-          <th>Anticipate Decreasing To</th>
-        </tr>
-        <tr>
-          <td>Twice a Week</td>
-          <td>${twiceWeekIncrease}</td>
-          <td>${twiceWeekDecrease}</td>
-        </tr>
-        <tr>
-          <td>Weekly</td>
-          <td>${weeklyIncrease}</td>
-          <td>${weeklyDecrease}</td>
-        </tr>
-        <tr>
-          <td>Every Other Week</td>
-          <td>${everyOtherWeekIncrease}</td>
-          <td>${everyOtherWeekDecrease}</td>
-        </tr>
-        <tr>
-          <td>Monthly</td>
-          <td>${monthlyIncrease}</td>
-          <td>${monthlyDecrease}</td>
-        </tr>
-      `;
-
-      const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
-      const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
-
-      let totalPersonhours = customPersonhours;
-
-      totalPersonhours -= (twiceWeekIncrease - twiceWeekDecrease) * 2;
-      totalPersonhours -= (weeklyIncrease - weeklyDecrease) * 1;
-      totalPersonhours -= (everyOtherWeekIncrease - everyOtherWeekDecrease) * 0.5;
-      totalPersonhours -= (monthlyIncrease - monthlyDecrease) * 0.25;
-      totalPersonhours -= flexibility;
-
-      document.getElementById('result').innerHTML = `Personhours per Week: ${totalPersonhours} hours`;
     }
   </script>
 </body>
 </html>
-

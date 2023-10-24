@@ -65,22 +65,17 @@
       font-weight: bold;
     }
 
-    #error {
-      color: #ff0000;
-    }
   </style>
 </head>
 <body>
   <div id="container">
     <h1>Therapist Availability Calculator</h1>
-    
-    <div id="error" style="display: none;">Please enter the total personhours in your clinic.</div>
-
+  
     <label for="customPersonhours">Clinic hours per week:</label>
     <input type="number" id="customPersonhours" placeholder="Enter the total personhours in your clinic">
-
+  
     <div id="patientInputs"></div>
-
+  
     <button onclick="addInputField()">Add session frequency</button>
     
     <br> <!-- Added space between button and "Flexibility:" -->
@@ -88,12 +83,12 @@
     <label for="flexibility">Flexibility:</label>
     <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
     <p>Flexibility Level (hours per week left open on purpose): <span id="flexibilityValue">0</span></p>
-
+  
     <label for="predictNextMonth">Predict Next Month:</label>
     <input type="checkbox" id="predictNextMonth">
-
+  
     <button onclick="calculateAvailability()">Calculate</button>
-
+  
     <p id="result"></p>
   </div>
 
@@ -137,7 +132,7 @@
         if (selectedValue === '0') {
           // Show the custom fields for this custom frequency
           customFrequencyField.style.display = 'block';
-          customclientsField.style display = 'block';
+          customclientsField.style.display = 'block';
           clientsField.style.display = 'none'; // Hide the "Enter number of clients" field
         } else {
           // Hide the custom fields if another option is selected
@@ -156,24 +151,15 @@
       const customclientsInputs = document.querySelectorAll('.customclients');
       const clientsInputs = document.querySelectorAll('.clients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
-
+      
       let totalPersonhours = customPersonhours;
-
-      if (isNaN(customPersonhours) || customPersonhours <= 0) {
-        // Show the error message
-        document.getElementById('error').style.display = 'block';
-        return; // Exit the function early
-      } else {
-        // Hide the error message if customPersonhours is valid
-        document.getElementById('error').style.display = 'none';
-      }
 
       for (let i = 0; i < frequencySelects.length; i++) {
         const selectedFrequency = parseFloat(frequencySelects[i].value);
         const customFrequency = parseFloat(customFrequencyInputs[i].value);
         const customclients = parseFloat(customclientsInputs[i].value);
         const clients = parseFloat(clientsInputs[i].value);
-
+        
         if (!isNaN(customFrequency) && !isNaN(customclients)) {
           // Use custom frequency and clients if both are valid
           totalPersonhours -= customclients * customFrequency;
@@ -188,7 +174,7 @@
 
       if (predictNextMonth) {
         // Include instructions for next month's predictions
-        resultText += "<br><br>Placeholder for this feature.";
+        resultText += "<br><br><b>Placeholder for this feature.";
       }
 
       document.getElementById('result').innerHTML = resultText;

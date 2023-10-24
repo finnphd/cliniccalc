@@ -3,17 +3,20 @@
 <head>
   <title>Therapist Availability Calculator</title>
   <style>
-    /* CSS for modern and sleek design */
+    /* Updated CSS for centered and consistent design */
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
     #container {
       max-width: 600px;
-      margin: 0 auto;
       padding: 20px;
       background-color: #fff;
       border-radius: 5px;
@@ -27,17 +30,13 @@
 
     label {
       font-weight: bold;
+      display: block;
     }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    select, input[type="range"] {
+    input[type="number"],
+    select,
+    input[type="range"],
+    input[type="checkbox"] {
       width: 100%;
       padding: 8px;
       margin-bottom: 10px;
@@ -54,6 +53,8 @@
       cursor: pointer;
       font-weight: bold;
       margin-bottom: 10px;
+      display: block;
+      margin: 0 auto;
     }
 
     button:hover {
@@ -63,8 +64,8 @@
     #result {
       margin-top: 20px;
       font-weight: bold;
+      text-align: center;
     }
-
   </style>
 </head>
 <body>
@@ -78,7 +79,7 @@
   
     <button onclick="addInputField()">Add session frequency</button>
     
-    <br> <!-- Added space between button and "Flexibility:" -->
+    <br>
     
     <label for="flexibility">Flexibility:</label>
     <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
@@ -111,7 +112,7 @@
         <label for="clients">Frequency:</label>
         <select class="frequencySelect">
           <option value="2">Twice a Week</option>
-          <option value="1">Weekly</option>
+          <option value="1" selected>Weekly</option>
           <option value="0.5">Every Other Week</option>
           <option value="0.25">Monthly</option>
           <option value="0">Custom</option>
@@ -133,7 +134,7 @@
           // Show the custom fields for this custom frequency
           customFrequencyField.style.display = 'block';
           customclientsField.style.display = 'block';
-          clientsField.style.display = 'none'; // Hide the "Enter number of clients" field
+          clientsField.style display = 'none'; // Hide the "Enter number of clients" field
         } else {
           // Hide the custom fields if another option is selected
           customFrequencyField.style.display = 'none';

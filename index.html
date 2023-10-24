@@ -71,12 +71,12 @@
   <div id="container">
     <h1>Therapist Availability Calculator</h1>
   
-    <label for="customPersonhours">Enter Custom Total Personhours per Week:</label>
+    <label for="customPersonhours">Enter your total clinic hours per week:</label>
     <input type="number" id="customPersonhours" placeholder="Enter total personhours in hours">
   
     <div id="patientInputs"></div>
   
-    <button onclick="addInputField()">Add Frequency Field</button>
+    <button onclick="addInputField()">Add session frequency</button>
     
     <br> <!-- Added space between button and "Flexibility:" -->
     
@@ -108,7 +108,7 @@
       
       const inputField = document.createElement('div');
       inputField.innerHTML = `
-        <label for="patients">Frequency:</label>
+        <label for="clients">Frequency:</label>
         <select class="frequencySelect">
           <option value="2">Twice a Week</option>
           <option value="1">Weekly</option>
@@ -117,28 +117,28 @@
           <option value="0">Custom</option>
         </select>
         <input type="number" class="customFrequency" placeholder="Frequency" style="display: none;">
-        <input type="number" class="customPatients" placeholder="Number of Patients" style="display: none;">
-        <input type="number" class="patients" placeholder="Enter number of patients">
+        <input type="number" class="customclients" placeholder="Number of clients" style="display: none;">
+        <input type="number" class="clients" placeholder="Enter number of clients">
       `;
       patientInputs.appendChild(inputField);
       
       // Event listener for handling "Custom" selection in the added frequency field
       const frequencySelect = inputField.querySelector('.frequencySelect');
       const customFrequencyField = inputField.querySelector('.customFrequency');
-      const customPatientsField = inputField.querySelector('.customPatients');
-      const patientsField = inputField.querySelector('.patients');
+      const customclientsField = inputField.querySelector('.customclients');
+      const clientsField = inputField.querySelector('.clients');
       frequencySelect.addEventListener('change', function() {
         const selectedValue = this.value;
         if (selectedValue === '0') {
           // Show the custom fields for this custom frequency
           customFrequencyField.style.display = 'block';
-          customPatientsField.style.display = 'block';
-          patientsField.style.display = 'none'; // Hide the "Enter number of patients" field
+          customclientsField.style.display = 'block';
+          clientsField.style.display = 'none'; // Hide the "Enter number of clients" field
         } else {
           // Hide the custom fields if another option is selected
           customFrequencyField.style.display = 'none';
-          customPatientsField.style.display = 'none';
-          patientsField.style.display = 'block'; // Show the "Enter number of patients" field
+          customclientsField.style.display = 'none';
+          clientsField.style.display = 'block'; // Show the "Enter number of clients" field
         }
       });
     }
@@ -148,8 +148,8 @@
       const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
       const frequencySelects = document.querySelectorAll('.frequencySelect');
       const customFrequencyInputs = document.querySelectorAll('.customFrequency');
-      const customPatientsInputs = document.querySelectorAll('.customPatients');
-      const patientsInputs = document.querySelectorAll('.patients');
+      const customclientsInputs = document.querySelectorAll('.customclients');
+      const clientsInputs = document.querySelectorAll('.clients');
       const predictNextMonth = document.getElementById('predictNextMonth').checked;
       
       let totalPersonhours = customPersonhours;
@@ -157,24 +157,24 @@
       for (let i = 0; i < frequencySelects.length; i++) {
         const selectedFrequency = parseFloat(frequencySelects[i].value);
         const customFrequency = parseFloat(customFrequencyInputs[i].value);
-        const customPatients = parseFloat(customPatientsInputs[i].value);
-        const patients = parseFloat(patientsInputs[i].value);
+        const customclients = parseFloat(customclientsInputs[i].value);
+        const clients = parseFloat(clientsInputs[i].value);
         
-        if (!isNaN(customFrequency) && !isNaN(customPatients)) {
-          // Use custom frequency and patients if both are valid
-          totalPersonhours -= customPatients * customFrequency;
-        } else if (!isNaN(selectedFrequency) && !isNaN(patients)) {
-          totalPersonhours -= patients * selectedFrequency;
+        if (!isNaN(customFrequency) && !isNaN(customclients)) {
+          // Use custom frequency and clients if both are valid
+          totalPersonhours -= customclients * customFrequency;
+        } else if (!isNaN(selectedFrequency) && !isNaN(clients)) {
+          totalPersonhours -= clients * selectedFrequency;
         }
       }
 
       totalPersonhours -= flexibility; // Subtract flexibility from totalPersonhours
 
-      let resultText = `Personhours per Week: ${totalPersonhours} hours`;
+      let resultText = `Available time per week: ${totalPersonhours} hours`;
 
       if (predictNextMonth) {
         // Include instructions for next month's predictions
-        resultText += "<br><br><b>Next Month's Predictions:</b> Consider factors such as expected changes in patient load, availability, and flexibility. You can modify the input values above to make predictions for next month.";
+        resultText += "<br><br><b>Placeholder for this feature.";
       }
 
       document.getElementById('result').innerHTML = resultText;

@@ -164,41 +164,46 @@
             });
         }
 
-        function calculateAvailability() {
-            const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
-            const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
-            const frequencySelects = document.querySelectorAll('.frequencySelect');
-            const customFrequencyInputs = document.querySelectorAll('.customFrequency');
-            const customclientsInputs = document.querySelectorAll('.customclients');
-            const clientsInputs = document.querySelectorAll('.clients');
-            const predictNextMonth = document.getElementById('predictNextMonth').checked;
+      function calculateAvailability() {
+    const customPersonhours = parseFloat(document.getElementById('customPersonhours').value) || 0;
+    const flexibility = parseInt(document.getElementById('flexibilitySlider').value) || 0;
+    const frequencySelects = document.querySelectorAll('.frequencySelect');
+    const customFrequencyInputs = document.querySelectorAll('.customFrequency');
+    const customclientsInputs = document.querySelectorAll('.customclients');
+    const clientsInputs = document.querySelectorAll('.clients');
+    const predictNextMonth = document.getElementById('predictNextMonth').checked;
 
-            let totalPersonhours = customPersonhours;
+    let totalPersonhours = customPersonhours;
 
-            for (let i = 0; i < frequencySelects.length; i++) {
-                const selectedFrequency = parseFloat(frequencySelects[i].value);
-                const customFrequency = parseFloat(customFrequencyInputs[i].value);
-                const customclients = parseFloat(customclientsInputs[i].value);
-                const clients = parseFloat(clientsInputs[i].value);
+    for (let i = 0; i < frequencySelects.length; i++) {
+        const selectedFrequency = parseFloat(frequencySelects[i].value) || 0;
+        const customFrequency = parseFloat(customFrequencyInputs[i].value) || 0;
+        const customclients = parseFloat(customclientsInputs[i].value) || 0;
+        const clients = parseFloat(clientsInputs[i].value) || 0;
 
-                if (selectedFrequency === 0) {
-                    // Custom frequency
-                    totalPersonhours -= customFrequency * customclients;
-                } else {
-                    // Predefined frequency
-                    totalPersonhours -= selectedFrequency * clients;
-                }
+        if (selectedFrequency === 0) {
+            // Custom frequency
+            if (customFrequency && customclients) { // Ensures both custom frequency and number of clients are provided
+                totalPersonhours -= customFrequency * customclients;
             }
-
-            // Account for flexibility
-            totalPersonhours -= flexibility;
-
-            if (predictNextMonth) {
-                totalPersonhours *= 1; // Assuming 4 weeks in a month
+        } else {
+            // Predefined frequency
+            if (clients) { // Ensures number of clients is provided
+                totalPersonhours -= selectedFrequency * clients;
             }
-
-            document.getElementById('result').textContent = `Available personhours: ${totalPersonhours}`;
         }
+    }
+
+    // Account for flexibility
+    totalPersonhours -= flexibility;
+
+    if (predictNextMonth) {
+        totalPersonhours *= 4; // Assuming 4 weeks in a month
+    }
+
+    document.getElementById('result').textContent = `Available personhours: ${totalPersonhours}`;
+}
+
 
         // [Additional functions and script logic, if any]
     </script>

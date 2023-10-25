@@ -1,184 +1,207 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>Therapist Availability Calculator</title>
-  <style>
-    /* CSS for modern and sleek design */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
+    <title>Therapist Availability Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    #container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+        #container {
+            max-width: 650px;
+            margin: 20px;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
 
-    h1 {
-      color: #333;
-      text-align: center;
-    }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
 
-    label {
-      font-weight: bold;
-    }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+        input[type="number"],
+        select,
+        input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 14px;
+        }
 
-    select, input[type="range"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+        button {
+            background-color: #0074b8;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            margin: 15px 0;
+            width: 100%;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    button {
-      background-color: #0074b8;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+        button:hover {
+            background-color: #005a9e;
+        }
 
-    button:hover {
-      background-color: #005a9e;
-    }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+            color: #0074b8;
+        }
 
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-    }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+        }
 
-  </style>
+        .input-group select,
+        .input-group input {
+            width: 48%;
+        }
+    </style>
 </head>
+
 <body>
-  <div id="container">
-    <h1>Therapist Availability Calculator</h1>
-  
-    <label for="customPersonhours">Clinic hours per week:</label>
-    <input type="number" id="customPersonhours" placeholder="Enter the total personhours in your clinic">
-  
-    <div id="patientInputs"></div>
-  
-    <button onclick="addInputField()">Add session frequency</button>
-    
-    <br> <!-- Added space between button and "Flexibility:" -->
-    
-    <label for="flexibility">Flexibility:</label>
-    <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
-    <p>Flexibility Level (hours per week left open on purpose): <span id="flexibilityValue">0</span></p>
-  
-    <label for="predictNextMonth">Predict Next Month:</label>
-    <input type="checkbox" id="predictNextMonth">
-  
-    <button onclick="calculateAvailability()">Calculate</button>
-  
-    <p id="result"></p>
-  </div>
+    <div id="container">
+        <h1>Therapist Availability Calculator</h1>
 
-  <script>
-    // Function to update flexibility value display
-    function updateFlexibilityValue() {
-      const flexibilitySlider = document.getElementById('flexibilitySlider');
-      const flexibilityValue = document.getElementById('flexibilityValue');
-      flexibilityValue.textContent = flexibilitySlider.value;
-    }
+        <label for="customPersonhours">Clinic hours per week:</label>
+        <input type="number" id="customPersonhours" placeholder="Enter total personhours in your clinic">
 
-    // Add an event listener for the slider input
-    document.getElementById('flexibilitySlider').addEventListener('input', updateFlexibilityValue);
+        <div id="patientInputs"></div>
 
-    function addInputField() {
-      const patientInputs = document.getElementById('patientInputs');
-      
-      const inputField = document.createElement('div');
-      inputField.innerHTML = `
-        <label for="clients">Frequency:</label>
-        <select class="frequencySelect">
-          <option value="2">Twice a Week (2 personhours/week)</option>
-          <option value="1" selected>Weekly (1 personhour/week)</option>
-          <option value="0.5">Every Other Week (.5 personhours/week)</option>
-          <option value="0.25">Monthly (.25 personhours/week)</option>
-          <option value="0">Custom</option>
-        </select>
-        <input type="number" class="customFrequency" placeholder="Personhours/week" style="display: none;">
-        <input type="number" class="customclients" placeholder="Number of clients" style="display: none;">
-        <input type="number" class="clients" placeholder="Enter number of clients">
-      `;
-      patientInputs.appendChild(inputField);
-      
-      // Event listener for handling "Custom" selection in the added frequency field
-      const frequencySelect = inputField.querySelector('.frequencySelect');
-      const customFrequencyField = inputField.querySelector('.customFrequency');
-      const customclientsField = inputField.querySelector('.customclients');
-      const clientsField = inputField.querySelector('.clients');
-      frequencySelect.addEventListener('change', function() {
-        const selectedValue = this.value;
-        if (selectedValue === '0') {
-          // Show the custom fields for this custom frequency
-          customFrequencyField.style.display = 'block';
-          customclientsField.style.display = 'block';
-          clientsField.style.display = 'none'; // Hide the "Enter number of clients" field
-        } else {
-          // Hide the custom fields if another option is selected
-          customFrequencyField.style.display = 'none';
-          customclientsField.style.display = 'none';
-          clientsField.style.display = 'block'; // Show the "Enter number of clients" field
+        <button onclick="addInputField()">Add session frequency</button>
+
+        <label for="flexibility">Flexibility:</label>
+        <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
+        <p>Flexibility Level (hours per week left open on purpose): <span id="flexibilityValue">0</span></p>
+
+        <label for="predictNextMonth">Predict Next Month:</label>
+        <input type="checkbox" id="predictNextMonth">
+
+        <button onclick="calculateAvailability()">Calculate</button>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+        // Function to update flexibility value display
+        function updateFlexibilityValue() {
+            const flexibilitySlider = document.getElementById('flexibilitySlider');
+            const flexibilityValue = document.getElementById('flexibilityValue');
+            flexibilityValue.textContent = flexibilitySlider.value;
         }
-      });
-    }
 
-    function calculateAvailability() {
-      const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
-      const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
-      const frequencySelects = document.querySelectorAll('.frequencySelect');
-      const customFrequencyInputs = document.querySelectorAll('.customFrequency');
-      const customclientsInputs = document.querySelectorAll('.customclients');
-      const clientsInputs = document.querySelectorAll('.clients');
-      const predictNextMonth = document.getElementById('predictNextMonth').checked;
-      
-      let totalPersonhours = customPersonhours;
+        // Add an event listener for the slider input
+        document.getElementById('flexibilitySlider').addEventListener('input', updateFlexibilityValue);
 
-      for (let i = 0; i < frequencySelects.length; i++) {
-        const selectedFrequency = parseFloat(frequencySelects[i].value);
-        const customFrequency = parseFloat(customFrequencyInputs[i].value);
-        const customclients = parseFloat(customclientsInputs[i].value);
-        const clients = parseFloat(clientsInputs[i].value);
-        
-        if (!isNaN(customFrequency) && !isNaN(customclients)) {
-          // Use custom frequency and clients if both are valid
-          totalPersonhours -= customclients * customFrequency;
-        } else if (!isNaN(selectedFrequency) && !isNaN(clients)) {
-          totalPersonhours -= clients * selectedFrequency;
+        function addInputField() {
+            const patientInputs = document.getElementById('patientInputs');
+
+            const inputField = document.createElement('div');
+            inputField.innerHTML = `
+                <label for="clients">Frequency:</label>
+                <select class="frequencySelect">
+                  <option value="2">Twice a Week (2 personhours/week)</option>
+                  <option value="1" selected>Weekly (1 personhour/week)</option>
+                  <option value="0.5">Every Other Week (.5 personhours/week)</option>
+                  <option value="0.25">Monthly (.25 personhours/week)</option>
+                  <option value="0">Custom</option>
+                </select>
+                <input type="number" class="customFrequency" placeholder="Personhours/week" style="display: none;">
+                <input type="number" class="customclients" placeholder="Number of clients" style="display: none;">
+                <input type="number" class="clients" placeholder="Enter number of clients">
+            `;
+            patientInputs.appendChild(inputField);
+
+            // Event listener for handling "Custom" selection in the added frequency field
+            const frequencySelect = inputField.querySelector('.frequencySelect');
+            const customFrequencyField = inputField.querySelector('.customFrequency');
+            const customclientsField = inputField.querySelector('.customclients');
+            const clientsField = inputField.querySelector('.clients');
+            frequencySelect.addEventListener('change', function () {
+                const selectedValue = this.value;
+                if (selectedValue === '0') {
+                    // Show the custom fields for this custom frequency
+                    customFrequencyField.style.display = 'block';
+                    customclientsField.style.display = 'block';
+                    clientsField.style.display = 'none'; // Hide the "Enter number of clients" field
+                } else {
+                    // Hide the custom fields if another option is selected
+                    customFrequencyField.style.display = 'none';
+                    customclientsField.style.display = 'none';
+                    clientsField.style.display = 'block'; // Show the "Enter number of clients" field
+                }
+            });
         }
-      }
 
-      totalPersonhours -= flexibility; // Subtract flexibility from totalPersonhours
+        function calculateAvailability() {
+            const customPersonhours = parseFloat(document.getElementById('customPersonhours').value);
+            const flexibility = parseInt(document.getElementById('flexibilitySlider').value);
+            const frequencySelects = document.querySelectorAll('.frequencySelect');
+            const customFrequencyInputs = document.querySelectorAll('.customFrequency');
+            const customclientsInputs = document.querySelectorAll('.customclients');
+            const clientsInputs = document.querySelectorAll('.clients');
+            const predictNextMonth = document.getElementById('predictNextMonth').checked;
 
-      let resultText = `Available time per week: ${totalPersonhours} hours`;
+            let totalPersonhours = customPersonhours;
 
-      if (predictNextMonth) {
-        // Include instructions for next month's predictions
-        resultText += "<br><br><b>Placeholder for this feature.";
-      }
+            for (let i = 0; i < frequencySelects.length; i++) {
+                const selectedFrequency = parseFloat(frequencySelects[i].value);
+                const customFrequency = parseFloat(customFrequencyInputs[i].value);
+                const customclients = parseFloat(customclientsInputs[i].value);
+                const clients = parseFloat(clientsInputs[i].value);
 
-      document.getElementById('result').innerHTML = resultText;
-    }
-  </script>
+                if (selectedFrequency === 0) {
+                    // Custom frequency
+                    totalPersonhours -= customFrequency * customclients;
+                } else {
+                    // Predefined frequency
+                    totalPersonhours -= selectedFrequency * clients;
+                }
+            }
+
+            // Account for flexibility
+            totalPersonhours -= flexibility;
+
+            if (predictNextMonth) {
+                totalPersonhours *= 4; // Assuming 4 weeks in a month
+            }
+
+            document.getElementById('result').textContent = `Available personhours: ${totalPersonhours}`;
+        }
+
+        // [Additional functions and script logic, if any]
+    </script>
 </body>
+
 </html>

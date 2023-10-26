@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Therapist Availability Calculator</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <title>Clinic Availability Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,12 +82,12 @@
     <div id="container">
         <h1>Clinic Availability Calculator</h1>
 
-        <label for="customPersonhours">Clinic hours per week:</label>
-        <input type="number" id="customPersonhours" placeholder="Enter the total personhours in your clinic">
+        <label for="clinicPersonhours">Clinic hours per week:</label>
+        <input type="number" id="clinicPersonhours" placeholder="Enter the total personhours for the clinic">
 
-        <div id="patientInputs"></div>
+        <div id="serviceInputs"></div>
 
-        <button onclick="addInputField()">Add session frequency</button>
+        <button onclick="addInputField()">Add service frequency</button>
 
         <label for="flexibility">Flexibility:</label>
         <input type="range" id="flexibilitySlider" min="0" max="5" step="1" value="0">
@@ -110,11 +111,11 @@
         document.getElementById('flexibilitySlider').addEventListener('input', updateFlexibilityValue);
 
         function addInputField() {
-            const patientInputs = document.getElementById('patientInputs');
+            const serviceInputs = document.getElementById('serviceInputs');
 
             const inputField = document.createElement('div');
             inputField.innerHTML = `
-                <label for="frequency">Frequency:</label>
+                <label for="frequency">Service Frequency:</label>
                 <select class="frequencySelect">
                     <option value="2">Twice a Week (2 personhours/week)</option>
                     <option value="1" selected>Weekly (1 personhour/week)</option>
@@ -123,17 +124,17 @@
                 </select>
                 <input type="number" class="clients" placeholder="Enter number of clients">
             `;
-            patientInputs.appendChild(inputField);
+            serviceInputs.appendChild(inputField);
         }
 
         function calculateAvailability() {
-            const customPersonhours = parseFloat(document.getElementById('customPersonhours').value) || 0;
+            const clinicPersonhours = parseFloat(document.getElementById('clinicPersonhours').value) || 0;
             const flexibility = parseInt(document.getElementById('flexibilitySlider').value) || 0;
             const frequencySelects = document.querySelectorAll('.frequencySelect');
             const clientsInputs = document.querySelectorAll('.clients');
             const predictNextMonth = document.getElementById('predictNextMonth').checked;
 
-            let totalPersonhours = customPersonhours;
+            let totalPersonhours = clinicPersonhours;
 
             for (let i = 0; i < frequencySelects.length; i++) {
                 const selectedFrequency = parseFloat(frequencySelects[i].value) || 0;
@@ -150,7 +151,7 @@
                 totalPersonhours *= 4;
             }
 
-            document.getElementById('result').textContent = `Available personhours: ${totalPersonhours}`;
+            document.getElementById('result').textContent = `Available clinic personhours: ${totalPersonhours}`;
         }
     </script>
 </body>
